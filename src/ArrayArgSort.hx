@@ -23,21 +23,30 @@
 
 /**
   ArrayArgSort provides a stable implementation of merge sort through its `argsort`
-  method. It should be used instead of `Array.sort` in cases where the order
-  of equal elements has to be retained on all targets.
+  method. It should be used in cases where the order of equal elements has to be 
+  retained on all targets.
 **/
 class ArrayArgSort {
 
   /**
-    Sorts Array `a` according to the comparison function `cmp`, where
-    `cmp(x,y)` returns 0 if `x == y`, a positive Int if `x > y` and a
-    negative Int if `x < y`.
+    Returns an array of indices that can be used to sort the Array `a` according 
+    to the comparison function `cmp`, where `cmp(x,y)` returns 0 if `x == y`, 
+    a positive Int if `x > y` and a negative Int if `x < y`.
 
-    This operation modifies Array `a` in place.
+    This operation modifies Array `sortedIndices` in place (if passed as argument).
 
     This operation is stable: The order of equal elements is preserved.
 
     If `a` or `cmp` are null, the result is unspecified.
+
+    Example:
+    ```
+      function icmp(a:Int, b:Int) return a - b;
+      
+      var array = [5,8,1,13,2,1,3];
+      var sortedIndices = ArrayArgSort.argsort(array, icmp);
+      trace(sortedIndices.map(function(idx) return array[idx])); // [1,1,2,3,5,8,13]
+    ```
   **/
   static public function argsort<T>(a:Array<T>, cmp:T -> T -> Int, ?sortedIndices:Array<Int>):Array<Int> {
     var len = a.length;
