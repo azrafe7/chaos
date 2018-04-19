@@ -63,7 +63,7 @@ class ArrayArgSort {
         var j = i;
         while (j > from) {
           if (compare(a, cmp, j, j - 1, indices) < 0)
-            swap(a, j - 1, j, indices);
+            swapIndices(indices, j - 1, j);
           else
             break;
           j--;
@@ -82,7 +82,7 @@ class ArrayArgSort {
       return indices;
     if (len1 + len2 == 2) {
       if (compare(a, cmp, pivot, from, indices) < 0)
-        swap(a, pivot, from, indices);
+        swapIndices(indices, pivot, from);
       return indices;
     }
     if (len1 > len2) {
@@ -96,14 +96,14 @@ class ArrayArgSort {
       first_cut = upper(a, cmp, from, pivot, second_cut, indices);
       len11 = first_cut - from;
     }
-    rotate(a, cmp, first_cut, pivot, second_cut, indices);
+    rotateIndices(indices, cmp, first_cut, pivot, second_cut);
     new_mid = first_cut + len22;
     doMerge(a, cmp, from, first_cut, new_mid, len11, len22, indices);
     doMerge(a, cmp, new_mid, second_cut, to, len1 - len11, len2 - len22, indices);
     return indices;
   }
 
-  static function rotate<T>(a:Array<T>, cmp, from, mid, to, indices:Array<Int>) {
+  static function rotateIndices(indices:Array<Int>, cmp, from, mid, to) {
     var n;
     if (from == mid || mid == to) return;
     n = gcd(to - from, mid - from);
@@ -159,7 +159,7 @@ class ArrayArgSort {
     return from;
   }
 
-  static function swap<T>(a:Array<T>, i, j, indices:Array<Int>) {
+  static inline function swapIndices(indices:Array<Int>, i, j) {
     var tmp = indices[i];
     indices[i] = indices[j];
     indices[j] = tmp;
