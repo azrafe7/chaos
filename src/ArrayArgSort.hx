@@ -62,8 +62,8 @@ class ArrayArgSort {
       for (i in (from + 1)...to) {
         var j = i;
         while (j > from) {
-          if (compare(a, cmp, j, j - 1, indices) < 0)
-            swapIndices(indices, j - 1, j);
+          if (Util.indirectCompare(a, cmp, j, j - 1, indices) < 0)
+            Util.swap(indices, j - 1, j);
           else
             break;
           j--;
@@ -81,8 +81,8 @@ class ArrayArgSort {
     if (len1 == 0 || len2 == 0)
       return indices;
     if (len1 + len2 == 2) {
-      if (compare(a, cmp, pivot, from, indices) < 0)
-        swapIndices(indices, pivot, from);
+      if (Util.indirectCompare(a, cmp, pivot, from, indices) < 0)
+        Util.swap(indices, pivot, from);
       return indices;
     }
     if (len1 > len2) {
@@ -135,7 +135,7 @@ class ArrayArgSort {
     while (len > 0) {
       half = len >> 1;
       mid = from + half;
-      if (compare(a, cmp, val, mid, indices) < 0)
+      if (Util.indirectCompare(a, cmp, val, mid, indices) < 0)
         len = half;
       else {
         from = mid + 1;
@@ -150,22 +150,12 @@ class ArrayArgSort {
     while (len > 0) {
       half = len >> 1;
       mid = from + half;
-      if (compare(a, cmp, mid, val, indices) < 0) {
+      if (Util.indirectCompare(a, cmp, mid, val, indices) < 0) {
         from = mid + 1;
         len = len - half - 1;
       } else
         len = half;
     }
     return from;
-  }
-
-  static inline function swapIndices(indices:Array<Int>, i, j) {
-    var tmp = indices[i];
-    indices[i] = indices[j];
-    indices[j] = tmp;
-  }
-
-  static inline function compare<T>(a:Array<T>, cmp, i, j, indices:Array<Int>) {
-    return cmp(a[indices[i]], a[indices[j]]);
   }
 }
