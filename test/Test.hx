@@ -9,6 +9,7 @@ class Test {
     var original = IntID.fromIntArray(nums);
     var copy = IntID.fromIntArray(nums);
     trace('LEN      : ' + original.length);
+    trace('NUMS     : ' + nums);
     trace('ORIGINAL : ' + original);
     trace('COPY     : ' + copy);
     
@@ -20,6 +21,12 @@ class Test {
     trace('ARRAYSORT: ' + original);
     trace('ARGSORT  : ' + [for (idx in sortedIndices) copy[idx]]);
     trace('ARGSORT2 : ' + [for (idx in ArrayArgSort.argsort(copy, IntID.compare)) copy[idx]]);
+    QuickSort.sort(copy, IntID.compare);
+    trace('QUICKSORT: ' + copy);
+    for (i in 0...copy.length) {
+      var arr = IntID.fromIntArray(nums);
+      trace(i + 'th: ' + QuickSort.select(arr, IntID.compare, i)); 
+    }
   }  
 }
 

@@ -7,32 +7,49 @@ class QuickSort {
     qsort(a, cmp, 0, a.length - 1);
   }
   
+  static public function select<T>(a:Array<T>, cmp:T -> T -> Int, kth:Int):T
+  {
+    return qselect(a, cmp, 0, a.length - 1, kth);
+  }
+  
   static function qsort<T>(a:Array<T>, cmp:T -> T -> Int, lo:Int, hi:Int):Void
   {
     if (lo < hi) {
-      var p = partition(a, cmp, lo, hi);
+      var p = partition(a, cmp, lo, hi, lo + Std.random(hi - lo + 1));
       qsort(a, cmp, lo, p);
       qsort(a, cmp, p + 1, hi);
     }
   }
   
-  static function partition<T>(a:Array<T>, cmp:T -> T -> Int, lo:Int, hi:Int)
+  static function qselect<T>(a:Array<T>, cmp:T -> T -> Int, lo:Int, hi:Int, kth:Int):T
   {
-    var pivot = a[lo];
-    var i = lo - 1;
-    var j = hi + 1;
     while (true) {
-      do {
-        i++;
-      } while (cmp(a[i], pivot) < 0);
-      do {
-        j--;
-      } while (cmp(a[j], pivot) > 0);
-      
-      if (i >= j) break;
-      
-      Util.swap(a, i, j);
+      if (lo == hi) break;
+      var pivotIdx = lo + Std.random(hi - lo + 1);
+      pivotIdx = partition(a, cmp, lo, hi, pivotIdx);
+      if (kth == pivotIdx) {
+        return a[kth];
+      } else if (kth < pivotIdx) {
+        hi = pivotIdx - 1;
+      } else {
+        lo = pivotIdx + 1;
+      }
     }
-    return j;
+    return a[lo];
+  }
+  
+  static function partition<T>(a:Array<T>, cmp:T -> T -> Int, lo:Int, hi:Int, pivotIdx:Int):Int
+  {
+    var pivot = a[pivotIdx];
+    Util.swap(a, pivotIdx, hi); // move pivot to end
+    var storeIdx = lo;
+    for (i in lo...hi) {
+      if (cmp(a[i], pivot) < 0) {
+        Util.swap(a, storeIdx, i);
+        storeIdx++;
+      }
+    }
+    Util.swap(a, hi, storeIdx); // move pivot to its final place
+    return storeIdx;
   }  
 }
