@@ -27,6 +27,10 @@ class Test {
       var arr = IntID.fromIntArray(nums);
       trace(i + 'th: ' + QuickSort.select(arr, IntID.compare, i)); 
     }
+    var arr = IntID.fromIntArray(nums);
+    var i = nums.length - 1;
+    trace(i + 'th: ' + QuickSort.select(arr, IntID.compare, i)); 
+    trace('QUICKSEL : ' + arr);
   }  
 }
 
