@@ -12,10 +12,10 @@ class QuickSort {
     return qselect(a, cmp, 0, a.length - 1, kth);
   }
   
-  static inline var M = 12;
+  static inline var M = 32;
   static function qsort<T>(a:Array<T>, cmp:T -> T -> Int, lo:Int, hi:Int):Void
   {
-    if (lo < hi) {
+    while (lo < hi) {
       
       // use insertion sort for small sequences
       if (hi - lo < M) {
@@ -33,8 +33,15 @@ class QuickSort {
       }
       
       var p = partition(a, cmp, lo, hi, medianOfThree(a, cmp, lo, hi));
-      qsort(a, cmp, lo, p);
-      qsort(a, cmp, p + 1, hi);
+      
+      // sort shorter sequence first
+      if (p - lo < hi - p) {
+        qsort(a, cmp, lo, p);
+        lo = p + 1;
+      } else {
+        qsort(a, cmp, p + 1, hi);
+        hi = p;
+      }
     }
   }
   
@@ -42,8 +49,7 @@ class QuickSort {
   {
     while (true) {
       if (lo == hi) break;
-      var pivotIdx = medianOfThree(a, cmp, lo, hi);
-      pivotIdx = partition(a, cmp, lo, hi, pivotIdx);
+      var pivotIdx = partition(a, cmp, lo, hi, medianOfThree(a, cmp, lo, hi));
       if (kth == pivotIdx) {
         return a[kth];
       } else if (kth < pivotIdx) {
