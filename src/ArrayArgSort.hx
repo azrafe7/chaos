@@ -96,14 +96,14 @@ class ArrayArgSort {
       first_cut = upper(a, cmp, from, pivot, second_cut, indices);
       len11 = first_cut - from;
     }
-    rotateIndices(indices, cmp, first_cut, pivot, second_cut);
+    rotateIndices(indices, first_cut, pivot, second_cut);
     new_mid = first_cut + len22;
     doMerge(a, cmp, from, first_cut, new_mid, len11, len22, indices);
     doMerge(a, cmp, new_mid, second_cut, to, len1 - len11, len2 - len22, indices);
     return indices;
   }
 
-  static function rotateIndices(indices:Array<Int>, cmp, from, mid, to) {
+  static function rotateIndices(indices:Array<Int>, from, mid, to) {
     var n;
     if (from == mid || mid == to) return;
     n = gcd(to - from, mid - from);
