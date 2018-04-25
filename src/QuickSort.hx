@@ -2,7 +2,7 @@
 
 class QuickSort {
   
-  static public function sort<T>(a:Array<T>, cmp:T -> T -> Int):Void
+  inline static public function sort<T>(a:Array<T>, cmp:T -> T -> Int):Void
   {
     qsort(a, cmp, 0, a.length - 1);
   }
@@ -12,10 +12,10 @@ class QuickSort {
     return qselect(a, cmp, 0, a.length - 1, kth);
   }
   
-  static inline var M = 32;
+  static inline var M = 12;
   static function qsort<T>(a:Array<T>, cmp:T -> T -> Int, lo:Int, hi:Int):Void
   {
-    while (lo < hi) {
+    if (lo < hi) {
       
       // use insertion sort for small sequences
       if (hi - lo < M) {
@@ -32,16 +32,11 @@ class QuickSort {
         return;
       }
       
-      var p = partition(a, cmp, lo, hi, medianOfThree(a, cmp, lo, hi));
+      var pivotIdx = medianOfThree(a, cmp, lo, hi);
+      pivotIdx = partition(a, cmp, lo, hi, pivotIdx);
       
-      // sort shorter sequence first
-      if (p - lo < hi - p) {
-        qsort(a, cmp, lo, p);
-        lo = p + 1;
-      } else {
-        qsort(a, cmp, p + 1, hi);
-        hi = p;
-      }
+      qsort(a, cmp, lo, pivotIdx);
+      qsort(a, cmp, pivotIdx + 1, hi);
     }
   }
   
@@ -72,16 +67,17 @@ class QuickSort {
         storeIdx++;
       }
     }
+    if (lo == storeIdx) storeIdx = pivotIdx; // no swaps done => move pivot to original pos (!IMPORTANT)
     Util.swap(a, hi, storeIdx); // move pivot to its final place
     return storeIdx;
   }
   
-  static function medianOfThree<T>(a:Array<T>, cmp:T -> T -> Int, lo:Int, hi:Int):Int {
+  static public function medianOfThree<T>(a:Array<T>, cmp:T -> T -> Int, lo:Int, hi:Int):Int {
     var mid = lo + ((hi - lo) >> 1);
-    var left = a[lo], middle = a[mid], right = a[hi];
-    if (cmp(left, middle) > 0) Util.swap(a, lo, mid);
-    if (cmp(left, right) > 0) Util.swap(a, lo, hi);
-    if (cmp(middle, right) > 0) Util.swap(a, mid, hi);
+    if (Util.compare(a, cmp, lo, mid) > 0) Util.swap(a, lo, mid);
+    if (Util.compare(a, cmp, lo, hi) > 0) Util.swap(a, lo, hi);
+    if (Util.compare(a, cmp, mid, hi) > 0) Util.swap(a, mid, hi);
+    
     return mid;
   }
 }
