@@ -12,9 +12,13 @@ class QuickSort {
     return qselect(a, cmp, 0, a.length - 1, kth);
   }
   
-  static inline var M = 12;
-  static function qsort<T>(a:Array<T>, cmp:T -> T -> Int, lo:Int, hi:Int):Void
+  static public var stackDepth = 0;
+  static public var calls = 0;
+  static inline var M = 0;
+  static public function qsort<T>(a:Array<T>, cmp:T -> T -> Int, lo:Int, hi:Int, level=0):Void
   {
+    stackDepth = level > stackDepth ? level : stackDepth;
+    calls++;
     if (lo < hi) {
       
       // use insertion sort for small sequences
@@ -35,8 +39,38 @@ class QuickSort {
       var pivotIdx = medianOfThree(a, cmp, lo, hi);
       pivotIdx = partition2(a, cmp, lo, hi, pivotIdx);
       
-      qsort(a, cmp, lo, pivotIdx);
-      qsort(a, cmp, pivotIdx + 1, hi);
+      qsort(a, cmp, lo, pivotIdx, level+1);
+      qsort(a, cmp, pivotIdx + 1, hi, level+1);
+    }
+  }
+  
+  static public function qsort3way<T>(a:Array<T>, cmp:T -> T -> Int, lo:Int, hi:Int, level=0):Void
+  {
+    stackDepth = level > stackDepth ? level : stackDepth;
+    calls++;
+    if (lo < hi) {
+      
+      // use insertion sort for small sequences
+      if (hi - lo < M) {
+        for (i in (lo + 1)...hi + 1) {
+          var j = i;
+          while (j > lo) {
+            if (cmp(a[j], a[j - 1]) < 0)
+              Util.swap(a, j - 1, j);
+            else
+              break;
+            j--;
+          }
+        }
+        return;
+      }
+      
+      var pivotIdx = medianOfThree(a, cmp, lo, hi);
+      var pivotsIndices = [pivotIdx, 0];
+      partition3(a, cmp, lo, hi, pivotsIndices);
+      
+      qsort3way(a, cmp, lo, pivotsIndices[0]);
+      qsort3way(a, cmp, pivotsIndices[1], hi);
     }
   }
   
@@ -73,13 +107,13 @@ class QuickSort {
   
   static function partition2<T>(a:Array<T>, cmp:T -> T -> Int, lo:Int, hi:Int, pivotIdx:Int):Int
   {
-    var pivot = a[pivotIdx];
+    var pivotValue = a[pivotIdx];
     var i = lo;
     var j = hi;
     
     while (true) {
-      while (cmp(a[++i], pivot) < 0) {};
-      while (cmp(pivot, a[--j]) < 0) {
+      while (cmp(a[++i], pivotValue) < 0) {};
+      while (cmp(pivotValue, a[--j]) < 0) {
         if (j == lo) break;
       }
       if (i >= j) break;
@@ -87,6 +121,52 @@ class QuickSort {
     }
     Util.swap(a, i, hi);
     return i - 1;
+  }
+  
+  static function partition3<T>(a:Array<T>, cmp:T -> T -> Int, lo:Int, hi:Int, pivotsIndices:Array<Int>):Void
+  {
+    var pivotValue = a[pivotsIndices[0]];
+    var i = lo;
+    var j = hi;
+    var p = lo;
+    var q = pivotsIndices[0];
+    
+    while (true) {
+      while (cmp(a[++i], pivotValue) < 0) {};
+      while (cmp(pivotValue, a[--j]) < 0) {
+        if (j == lo) break;
+      }
+      if (i >= j) break;
+      Util.swap(a, i, j);
+      
+      if (cmp(a[i], pivotValue) == 0) {
+        p++;
+        Util.swap(a, p, i);
+      }
+      if (cmp(pivotValue, a[j]) == 0) {
+        q--;
+        Util.swap(a, q, j);
+      }
+    }
+    Util.swap(a, i, hi);
+    
+    j = i - 1;
+    i = i + 1;
+    var k = lo;
+    while (k < p) {
+      Util.swap(a, k, j);
+      k++;
+      j--;
+    }
+    k = hi - 1;
+    while (k > q) {
+      Util.swap(a, i, k);
+      k--;
+      i++;
+    }
+    
+    pivotsIndices[0] = i;
+    pivotsIndices[1] = j;
   }
   
   static public function medianOfThree<T>(a:Array<T>, cmp:T -> T -> Int, lo:Int, hi:Int):Int {
