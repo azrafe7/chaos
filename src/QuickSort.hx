@@ -67,7 +67,6 @@ class QuickSort {
         storeIdx++;
       }
     }
-    if (lo == storeIdx) storeIdx = pivotIdx; // no swaps done => move pivot to original pos (!IMPORTANT)
     Util.swap(a, hi, storeIdx); // move pivot to its final place
     return storeIdx;
   }
