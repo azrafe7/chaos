@@ -33,7 +33,7 @@ class QuickSort {
       }
       
       var pivotIdx = medianOfThree(a, cmp, lo, hi);
-      pivotIdx = partition(a, cmp, lo, hi, pivotIdx);
+      pivotIdx = partition2(a, cmp, lo, hi, pivotIdx);
       
       qsort(a, cmp, lo, pivotIdx);
       qsort(a, cmp, pivotIdx + 1, hi);
@@ -44,7 +44,7 @@ class QuickSort {
   {
     while (true) {
       if (lo == hi) break;
-      var pivotIdx = partition(a, cmp, lo, hi, medianOfThree(a, cmp, lo, hi));
+      var pivotIdx = partition2(a, cmp, lo, hi, medianOfThree(a, cmp, lo, hi));
       if (kth == pivotIdx) {
         return a[kth];
       } else if (kth < pivotIdx) {
@@ -69,6 +69,24 @@ class QuickSort {
     }
     Util.swap(a, hi, storeIdx); // move pivot to its final place
     return storeIdx;
+  }
+  
+  static function partition2<T>(a:Array<T>, cmp:T -> T -> Int, lo:Int, hi:Int, pivotIdx:Int):Int
+  {
+    var pivot = a[pivotIdx];
+    var i = lo;
+    var j = hi;
+    
+    while (true) {
+      while (cmp(a[++i], pivot) < 0) {};
+      while (cmp(pivot, a[--j]) < 0) {
+        if (j == lo) break;
+      }
+      if (i >= j) break;
+      Util.swap(a, i, j);
+    }
+    Util.swap(a, i, hi);
+    return i - 1;
   }
   
   static public function medianOfThree<T>(a:Array<T>, cmp:T -> T -> Int, lo:Int, hi:Int):Int {
