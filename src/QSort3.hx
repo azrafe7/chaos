@@ -6,7 +6,7 @@ class QSort3
 {
   inline static public function sort<T>(a:Array<T>, cmp:T -> T -> Int):Void
   {
-    Util.shuffle(a);
+    Util.shuffle(a); // check if needed to make it more stable/predictable, or can be removed
     qsort(a, cmp, 0, a.length - 1);
   }
   
@@ -17,6 +17,21 @@ class QSort3
     QuickSort.calls++;
     
     while (lo < hi) {
+      
+      // OPT: use insertion sort for small sequences
+      if (hi - lo < QuickSort.M) {
+        for (i in (lo + 1)...hi + 1) {
+          var j = i;
+          while (j > lo) {
+            if (cmp(a[j], a[j - 1]) < 0)
+              Util.swap(a, j - 1, j);
+            else
+              break;
+            j--;
+          }
+        }
+        return;
+      }
       
       var i = lo - 1, j = hi, p = lo - 1, q = hi; 
       var pivot = a[hi];
