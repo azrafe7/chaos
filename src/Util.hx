@@ -45,4 +45,53 @@ class Util
     
     return {sorted:sorted, invSorted:invSorted, allSame:allSame};
   }
+  
+  static public function shuffle<T>(a:Array<T>):Void
+  {
+    var len = a.length;
+    for (i in 0...len - 2) {
+      var j = i + Std.random(len - i);
+      Util.swap(a, i, j);
+    }
+  }
+  
+  static public function highlightIndices<T>(a:Array<T>, indices:Array<Int>, labels:Array<String>=null)
+  {
+    // clean/extend labels to be same length as indices
+    if (labels == null) labels = [];
+    for (i in 0...indices.length) {
+      if (i >= labels.length) labels[i] = '^';
+      if (labels[i].length > 1) labels[i] = labels[i].charAt(0);
+    }
+    
+  #if js
+    var str = "";
+  #else
+    var str = " ";
+  #end
+    var lengths = [for (i in 0...a.length) 1 + Std.string(a[i]).length];
+    for (i in 0...lengths.length) {
+      var len = lengths[i];
+      var idx = indices.indexOf(i);
+      if (idx >= 0) {
+        str += labels[idx] + [for (s in 0...len-1) " "].join("");
+      } else {
+        str += [for (s in 0...len) " "].join("");
+      }
+    }
+    return str;
+  }
+  
+  // clamp `x` to [`min`...`max`]. (both inclusive)
+  static public function iclamp(x:Int, min:Int, max:Int):Int {
+    return x < min ? min : x > max ? max : x;
+  }
+  
+  static public function imin(a:Int, b:Int):Int {
+    return a < b ? a : b;
+  }
+  
+  static public function imax(a:Int, b:Int):Int {
+    return a > b ? a : b;
+  }
 }

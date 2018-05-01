@@ -46,27 +46,66 @@ class QSort3
       var i = out_ij[0];
       var j = out_ij[1];
       
-      // test invariants
       trace(a.toString());
       trace(Util.highlightIndices(a, [j+1], ['^']));
       trace(Util.highlightIndices(a, [lo, hi], ['L','H']));
       trace(Util.highlightIndices(a, [i, j], ['i','j']));
       
+      // test invariants
       var pivot = a[j + 1];
       trace("pivotValue: " + pivot);
       
-      var ii = lo + 1;
-      while (ii < j)
+      var firstLtIdx = Util.iclamp(Util.imin(lo, j), lo, hi);
+      var lastLtIdx = Util.iclamp(Util.imin(i, j+1), lo, hi);
+      
+      var firstPivotIdx = Util.imin(lastLtIdx+1, j+1);
+      var lastPivotIdx = Util.imax(i, j-1);
+      
+      var firstGtIdx = lastPivotIdx;
+      var lastGtIdx = hi;
+      
+      // nothing can be said about a[hi] (might equal pivot!)
+      trace("INVARIANTS " + pivot);
+      //trace(a.toString());
+      //trace(Util.highlightIndices(a, [j+1], ['^']));
+      //trace(Util.highlightIndices(a, [lo, hi], ['L','H']));
+      //trace(Util.highlightIndices(a, [i, j], ['i','j']));
+      
+      trace(a.toString());
+      trace(Util.highlightIndices(a, [lo, hi], ['[',']']));
+      trace(Util.highlightIndices(a, [j+1], ['^']));
+      trace(Util.highlightIndices(a, [firstLtIdx], ['A']));
+      trace(Util.highlightIndices(a, [lastLtIdx], [')']));
+      trace(a.toString());
+      trace(Util.highlightIndices(a, [firstPivotIdx], ['M']));
+      trace(Util.highlightIndices(a, [lastPivotIdx], [')']));
+      trace(a.toString());
+      trace(Util.highlightIndices(a, [firstGtIdx], ['V']));
+      trace(Util.highlightIndices(a, [lastGtIdx], [')']));
+      
+      // test smaller than pivot
+      var val;
+      var ii = firstLtIdx + 1;
+      while (ii < lastLtIdx)
       {
-        var val = a[ii - 1];
+        val = a[ii - 1];
         assert(cmp(val, pivot) < 0, 'LT error a[${ii-1}] = $val vs $pivot');
         ii++;
       }
       
-      ii = i + 1;
-      while (ii <= hi + 1) {
-        var val = a[ii - 1];
+      // test greater than pivot
+      ii = firstGtIdx + 1;
+      while (ii < lastGtIdx) {
+        val = a[ii - 1];
         assert(cmp(val, pivot) > 0, 'GT error a[${ii-1}] = $val vs $pivot');
+        ii++;
+      }
+      
+      // test equal to pivot
+      ii = firstPivotIdx + 1;
+      while (ii < lastPivotIdx) {
+        val = a[ii - 1];
+        assert(cmp(val, pivot) == 0, 'EQ error a[${ii-1}] = $val vs $pivot');
         ii++;
       }
       
@@ -89,69 +128,84 @@ class QSort3
   {
     var i = lo - 1, j = hi, p = lo - 1, q = hi;
     var pivot = a[hi];
-    trace(a.toString());
-    trace(Util.highlightIndices(a, [hi], null));
+    //trace(a.toString());
+    //trace(Util.highlightIndices(a, [hi], null));
     
     while (true)
     {
-      trace(Util.highlightIndices(a, [i,j], ['i','j']));
+      //trace(Util.highlightIndices(a, [i,j], ['i','j']));
       while (cmp(a[++i], pivot) < 0) {
-        trace(Util.highlightIndices(a, [i], ['i']));
+        //trace(Util.highlightIndices(a, [i], ['i']));
       };
       while (cmp(pivot, a[--j]) < 0) {
-        trace(Util.highlightIndices(a, [j], ['j']));
+        //trace(Util.highlightIndices(a, [j], ['j']));
         if (j == lo) break;
       }
-      trace(a.toString());
-      trace(Util.highlightIndices(a, [i,j], ['i','j']));
-      if (i >= j) break;
+      //trace(a.toString());
+      //trace(Util.highlightIndices(a, [i,j], ['i','j']));
+      //trace(Util.highlightIndices(a, [p,q], ['p','q']));
+      if (i >= j) {
+        if (i == lo) {
+          //trace('maybe we have a pivot both at $i and $hi: ', a[i], a[hi]);
+          //while (cmp(a[j], pivot) == 0) {
+          //  q--;
+          //  //i++;
+          //  //j++;
+          //}
+        }
+        break;
+      }
       Util.swap(a, i, j);
-      trace(a.toString());
-      trace(Util.highlightIndices(a, [i,j], ['i','j']));
+      //trace(a.toString());
+      //trace(Util.highlightIndices(a, [i,j], ['i','j']));
+      //trace(Util.highlightIndices(a, [p,q], ['p','q']));
       
       if (cmp(a[i], pivot) == 0) {
         p++; 
         Util.swap(a, p, i); 
       }
-      trace(a.toString());
-      trace(Util.highlightIndices(a, [p,q], ['p','q']));
+      //trace(a.toString());
+      //trace(Util.highlightIndices(a, [p,q], ['p','q']));
       if (cmp(pivot, a[j]) == 0) {
         q--; 
         Util.swap(a, j, q); 
       }
-      trace(a.toString());
-      trace(Util.highlightIndices(a, [p,q], ['p','q']));
+      //trace(a.toString());
+      //trace(Util.highlightIndices(a, [p,q], ['p','q']));
     }
-    Util.swap(a, i, hi); 
-    trace(a.toString());
-    trace(Util.highlightIndices(a, [lo, hi], ['L','H']));
-    trace(Util.highlightIndices(a, [i, j], ['i','j']));
-    trace(Util.highlightIndices(a, [p, q], ['p','q']));
+    Util.swap(a, i, hi);
+    
+    //trace(a.toString());
+    //trace(Util.highlightIndices(a, [lo, hi], ['L','H']));
+    //trace(Util.highlightIndices(a, [i, j], ['i','j']));
+    //trace(Util.highlightIndices(a, [p, q], ['p','q']));
     j = i - 1;
     i = i + 1;
+    //trace(Util.highlightIndices(a, [i, j], ['i','j']));
     
     var k = lo;
-    trace(a.toString());
-    trace(Util.highlightIndices(a, [k, j, p], ['k','j', 'p']));
+    //trace(a.toString());
+    //trace(Util.highlightIndices(a, [k, j, p], ['k','j', 'p']));
     while (k < p) {
-      trace(a.toString());
-      trace(Util.highlightIndices(a, [k, j, p], ['k','j', 'p']));
+      //trace(a.toString());
+      //trace(Util.highlightIndices(a, [k, j, p], ['k','j', 'p']));
       Util.swap(a, k, j);
       k++;
       j--;
     }
+    
     k = hi - 1;
-    trace(Util.highlightIndices(a, [k, i, q], ['k','i', 'q']));
+    //trace(Util.highlightIndices(a, [k, i, q], ['k','i', 'q']));
     while (k >= q) {
-      trace(a.toString());
-      trace(Util.highlightIndices(a, [k, i, q], ['k','i', 'q']));
+      //trace(a.toString());
+      //trace(Util.highlightIndices(a, [k, i, q], ['k','i', 'q']));
       Util.swap(a, i, k);
       k--;
       i++;
     }
-    trace('pivot in place $pivot');
-    trace(a.toString());
-    trace(Util.highlightIndices(a, [i, j], ['i', 'j']));
+    //trace('pivot in place $pivot');
+    //trace(a.toString());
+    //trace(Util.highlightIndices(a, [i, j], ['i', 'j']));
     
     out_ij[0] = i;
     out_ij[1] = j;
