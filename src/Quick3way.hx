@@ -9,6 +9,11 @@ class Quick3way
     qsort(a, cmp, 0, a.length - 1);
   }
   
+  static public function select<T>(a:Array<T>, cmp:T -> T -> Int, kth:Int):T
+  {
+    return qselect(a, cmp, 0, a.length - 1, kth);
+  }
+  
   // quicksort the subarray a[lo .. hi] using 3-way partitioning
   static public function qsort<T>(a:Array<T>, cmp:T -> T -> Int, lo:Int, hi:Int, level=0):Void
   {
@@ -37,7 +42,29 @@ class Quick3way
       else               i++;
     }
     
+    //trace(a);
+    //trace(Util.highlightIndices(a, [lo, hi], ['l', 'h']));
+    //trace(Util.highlightIndices(a, [lt, gt], ['<', '>']));
+    
     lt_gt[0] = lt;
     lt_gt[1] = gt;
   }
+  
+  static function qselect<T>(a:Array<T>, cmp:T -> T -> Int, lo:Int, hi:Int, kth:Int):T
+  {
+    var lt_gt = [0, 0];
+    while (true) {
+      if (lo == hi) break;
+      partition(a, cmp, lo, hi, lt_gt);
+      var pivotIdx = lt_gt[0];
+      if (kth == pivotIdx) {
+        return a[kth];
+      } else if (kth < pivotIdx) {
+        hi = pivotIdx - 1;
+      } else {
+        lo = pivotIdx + 1;
+      }
+    }
+    return a[lo];
+  }  
 }

@@ -24,8 +24,8 @@ class QSort3
     //trace("Level: " + level);
     var out_ij = [0, 0];
     
-    //while (lo < hi) {
-    if (lo < hi) {
+    while (lo < hi) {
+    //if (lo < hi) {
       
       // OPT: use insertion sort for small sequences
       if (hi - lo < QuickSort.M) {
@@ -85,49 +85,49 @@ class QSort3
       //trace(Util.highlightIndices(a, [lastGtIdx], [')']));
       
       // test smaller than pivot
-      var val;
-      var ii = firstLtIdx;
-      while (ii < lastLtIdx)
-      {
-        val = a[ii];
-        assert(cmp(val, pivot) < 0, 'LT error a[${ii}] = $val vs $pivot');
-        ii++;
-      }
-      
-      // test greater than pivot
-      ii = firstGtIdx;
-      while (ii < lastGtIdx) {
-        val = a[ii];
-        assert(cmp(val, pivot) > 0, 'GT error a[${ii}] = $val vs $pivot');
-        ii++;
-      }
-      
-      // test equal to pivot
-      ii = firstPivotIdx;
-      while (ii < lastPivotIdx) {
-        val = a[ii];
-        assert(cmp(val, pivot) == 0, 'EQ error a[${ii}] = $val vs $pivot');
-        ii++;
-      }
-      
-      // test left branch already sorted
-      ii = lo;
-      while (ii < firstLtIdx) {
-        assert(cmp(a[ii], a[ii + 1]) <= 0, 'Not sorted $ii ${a[ii]} vs ${a[ii+1]}');
-        ii++;
-      }
+      //var val;
+      //var ii = firstLtIdx;
+      //while (ii < lastLtIdx)
+      //{
+      //  val = a[ii];
+      //  assert(cmp(val, pivot) < 0, 'LT error a[${ii}] = $val vs $pivot');
+      //  ii++;
+      //}
+      //
+      //// test greater than pivot
+      //ii = firstGtIdx;
+      //while (ii < lastGtIdx) {
+      //  val = a[ii];
+      //  assert(cmp(val, pivot) > 0, 'GT error a[${ii}] = $val vs $pivot');
+      //  ii++;
+      //}
+      //
+      //// test equal to pivot
+      //ii = firstPivotIdx;
+      //while (ii < lastPivotIdx) {
+      //  val = a[ii];
+      //  assert(cmp(val, pivot) == 0, 'EQ error a[${ii}] = $val vs $pivot');
+      //  ii++;
+      //}
+      //
+      //// test left branch already sorted
+      //ii = lo;
+      //while (ii < firstLtIdx) {
+      //  assert(cmp(a[ii], a[ii + 1]) <= 0, 'Not sorted $ii ${a[ii]} vs ${a[ii+1]}');
+      //  ii++;
+      //}
       
       // OPT: sort smaller sequence first and update the bounds afterwards.
       //      Helps in keeping stack depth to a minimum by not creating unnecessary stackframes while recursing.
-      //if (j - lo < hi - i) {
+      if (j - lo < hi - i) {
         //trace("qsort left");
         qsort(a, cmp, lo, j, level + 1);
-      //  lo = i;
-      //} else {
+        lo = i;
+      } else {
         //trace("qsort right");
         qsort(a, cmp, i, hi, level + 1);
-      //  hi = j;
-      //}
+        hi = j;
+      }
     }
   }
   
@@ -137,7 +137,7 @@ class QSort3
     var i = lo - 1, j = hi, p = lo - 1, q = hi;
     var pivot = a[hi];
     //trace(a.toString());
-    //trace(Util.highlightIndices(a, [hi], null));
+    //trace(Util.highlightIndices(a, [lo,hi], ['L', '^']));
     
     while (true)
     {
@@ -200,7 +200,7 @@ class QSort3
     var k = lo;
     //trace(a.toString());
     //trace(Util.highlightIndices(a, [k, j, p], ['k','j', 'p']));
-    while (k <= p /*&& k != j*/) {
+    while (k < p /*&& k != j*/) {
       //trace(a.toString());
       //trace(Util.highlightIndices(a, [k, j, p], ['k','j', 'p']));
       Util.swap(a, k, j);
@@ -210,7 +210,7 @@ class QSort3
     
     k = hi - 1;
     //trace(Util.highlightIndices(a, [k, i, q], ['k','i', 'q']));
-    while (k >= q/* && k != i*/) {
+    while (k > q/* && k != i*/) {
       //trace(a.toString());
       //trace(Util.highlightIndices(a, [k, i, q], ['k','i', 'q']));
       Util.swap(a, i, k);

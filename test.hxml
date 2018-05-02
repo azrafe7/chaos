@@ -1,0 +1,9 @@
+-main Test
+-cp src
+-cp test
+-lib thx.benchmark
+
+#-debug
+
+#-cpp bin\bench\cpp
+#-neko bin\bench\bench.n
