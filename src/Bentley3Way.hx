@@ -27,7 +27,8 @@ class Bentley3Way
     QuickSort.calls++;
     //trace("Level: " + level);
     
-    if (lo < hi) {
+    while (lo < hi) {
+    //if (lo < hi) {
       
       //trace(a.toString());
       
@@ -117,8 +118,13 @@ class Bentley3Way
       // ----------------------------
       
       
-      qsort(a, cmp, lo, j, level + 1);
-      qsort(a, cmp, i, hi, level + 1);
+      if (j - lo < hi - i) {
+        qsort(a, cmp, lo, j, level + 1);
+        lo = i;
+      } else {
+        qsort(a, cmp, i, hi, level + 1);
+        hi = j;
+      }
     }
   }
 }
