@@ -21,9 +21,10 @@ class QSort3
   {
     QuickSort.stackDepth = level > QuickSort.stackDepth ? level : QuickSort.stackDepth;
     QuickSort.calls++;
-    trace("Level: " + level);
+    //trace("Level: " + level);
     var out_ij = [0, 0];
     
+    //while (lo < hi) {
     if (lo < hi) {
       
       // OPT: use insertion sort for small sequences
@@ -41,82 +42,89 @@ class QSort3
         return;
       }
       
-      trace(a.toString());
+      //trace(a.toString());
       partition(a, cmp, lo, hi, out_ij);
       var i = out_ij[0];
       var j = out_ij[1];
       
-      trace(a.toString());
-      trace(Util.highlightIndices(a, [j+1], ['^']));
-      trace(Util.highlightIndices(a, [lo, hi], ['L','H']));
-      trace(Util.highlightIndices(a, [i, j], ['i','j']));
-      
-      // test invariants
-      var pivot = a[j + 1];
-      trace("pivotValue: " + pivot);
-      
-      var firstLtIdx = Util.iclamp(Util.imin(lo, j), lo, hi);
-      var lastLtIdx = Util.iclamp(Util.imin(i, j+1), lo, hi);
-      
-      var firstPivotIdx = Util.imin(lastLtIdx+1, j+1);
-      var lastPivotIdx = Util.imax(i, j-1);
-      
-      var firstGtIdx = lastPivotIdx;
-      var lastGtIdx = hi;
-      
-      // nothing can be said about a[hi] (might equal pivot!)
-      trace("INVARIANTS " + pivot);
       //trace(a.toString());
       //trace(Util.highlightIndices(a, [j+1], ['^']));
       //trace(Util.highlightIndices(a, [lo, hi], ['L','H']));
       //trace(Util.highlightIndices(a, [i, j], ['i','j']));
       
-      trace(a.toString());
-      trace(Util.highlightIndices(a, [lo, hi], ['[',']']));
-      trace(Util.highlightIndices(a, [j+1], ['^']));
-      trace(Util.highlightIndices(a, [firstLtIdx], ['A']));
-      trace(Util.highlightIndices(a, [lastLtIdx], [')']));
-      trace(a.toString());
-      trace(Util.highlightIndices(a, [firstPivotIdx], ['M']));
-      trace(Util.highlightIndices(a, [lastPivotIdx], [')']));
-      trace(a.toString());
-      trace(Util.highlightIndices(a, [firstGtIdx], ['V']));
-      trace(Util.highlightIndices(a, [lastGtIdx], [')']));
+      // test invariants
+      var pivot = a[j + 1];
+      //trace("pivotValue: " + pivot);
+      
+      var firstPivotIdx = j + 1;
+      var lastPivotIdx = i; // exclusive
+      
+      var firstLtIdx = lo;
+      var lastLtIdx = firstPivotIdx; // exclusive
+      
+      var firstGtIdx = lastPivotIdx;
+      var lastGtIdx = hi; // exclusive
+      
+      // nothing can be said about a[hi] (might equal pivot!)
+      //trace("INVARIANTS " + pivot);
+      ////trace(a.toString());
+      ////trace(Util.highlightIndices(a, [j+1], ['^']));
+      ////trace(Util.highlightIndices(a, [lo, hi], ['L','H']));
+      ////trace(Util.highlightIndices(a, [i, j], ['i','j']));
+      
+      //trace(a.toString());
+      //trace(Util.highlightIndices(a, [lo, hi], ['[',']']));
+      //trace(Util.highlightIndices(a, [j+1], ['^']));
+      //trace(Util.highlightIndices(a, [firstLtIdx], ['A']));
+      //trace(Util.highlightIndices(a, [lastLtIdx], [')']));
+      //trace(a.toString());
+      //trace(Util.highlightIndices(a, [firstPivotIdx], ['M']));
+      //trace(Util.highlightIndices(a, [lastPivotIdx], [')']));
+      //trace(a.toString());
+      //trace(Util.highlightIndices(a, [firstGtIdx], ['V']));
+      //trace(Util.highlightIndices(a, [lastGtIdx], [')']));
       
       // test smaller than pivot
       var val;
-      var ii = firstLtIdx + 1;
+      var ii = firstLtIdx;
       while (ii < lastLtIdx)
       {
-        val = a[ii - 1];
-        assert(cmp(val, pivot) < 0, 'LT error a[${ii-1}] = $val vs $pivot');
+        val = a[ii];
+        assert(cmp(val, pivot) < 0, 'LT error a[${ii}] = $val vs $pivot');
         ii++;
       }
       
       // test greater than pivot
-      ii = firstGtIdx + 1;
+      ii = firstGtIdx;
       while (ii < lastGtIdx) {
-        val = a[ii - 1];
-        assert(cmp(val, pivot) > 0, 'GT error a[${ii-1}] = $val vs $pivot');
+        val = a[ii];
+        assert(cmp(val, pivot) > 0, 'GT error a[${ii}] = $val vs $pivot');
         ii++;
       }
       
       // test equal to pivot
-      ii = firstPivotIdx + 1;
+      ii = firstPivotIdx;
       while (ii < lastPivotIdx) {
-        val = a[ii - 1];
-        assert(cmp(val, pivot) == 0, 'EQ error a[${ii-1}] = $val vs $pivot');
+        val = a[ii];
+        assert(cmp(val, pivot) == 0, 'EQ error a[${ii}] = $val vs $pivot');
+        ii++;
+      }
+      
+      // test left branch already sorted
+      ii = lo;
+      while (ii < firstLtIdx) {
+        assert(cmp(a[ii], a[ii + 1]) <= 0, 'Not sorted $ii ${a[ii]} vs ${a[ii+1]}');
         ii++;
       }
       
       // OPT: sort smaller sequence first and update the bounds afterwards.
       //      Helps in keeping stack depth to a minimum by not creating unnecessary stackframes while recursing.
       //if (j - lo < hi - i) {
-        trace("qsort left");
+        //trace("qsort left");
         qsort(a, cmp, lo, j, level + 1);
       //  lo = i;
       //} else {
-        trace("qsort right");
+        //trace("qsort right");
         qsort(a, cmp, i, hi, level + 1);
       //  hi = j;
       //}
@@ -141,6 +149,12 @@ class QSort3
         //trace(Util.highlightIndices(a, [j], ['j']));
         if (j == lo) break;
       }
+    #if js
+      if (a[lo] == pivot) {
+        //trace("lo == pivot");
+        untyped __js__("debugger");
+      }
+    #end
       //trace(a.toString());
       //trace(Util.highlightIndices(a, [i,j], ['i','j']));
       //trace(Util.highlightIndices(a, [p,q], ['p','q']));
@@ -186,7 +200,7 @@ class QSort3
     var k = lo;
     //trace(a.toString());
     //trace(Util.highlightIndices(a, [k, j, p], ['k','j', 'p']));
-    while (k < p) {
+    while (k <= p /*&& k != j*/) {
       //trace(a.toString());
       //trace(Util.highlightIndices(a, [k, j, p], ['k','j', 'p']));
       Util.swap(a, k, j);
@@ -196,7 +210,7 @@ class QSort3
     
     k = hi - 1;
     //trace(Util.highlightIndices(a, [k, i, q], ['k','i', 'q']));
-    while (k >= q) {
+    while (k >= q/* && k != i*/) {
       //trace(a.toString());
       //trace(Util.highlightIndices(a, [k, i, q], ['k','i', 'q']));
       Util.swap(a, i, k);
