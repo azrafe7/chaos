@@ -70,6 +70,7 @@ class Util
     var str = " ";
   #end
     var lengths = [for (i in 0...a.length) 1 + Std.string(a[i]).length];
+    lengths.push(4); // after end of array
     for (i in 0...lengths.length) {
       var len = lengths[i];
       var idx = indices.indexOf(i);
