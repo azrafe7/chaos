@@ -1,7 +1,7 @@
 // http://codeblab.com/wp-content/uploads/2009/09/DualPivotQuicksort.pdf
 
 
-class YaroslavskiyDualPivot 
+class YaroDualPivot 
 {
   inline static public function sort<T>(a:Array<T>, cmp:T -> T -> Int):Void
   {
@@ -12,8 +12,11 @@ class YaroslavskiyDualPivot
   inline static var CUT_OFF = 27;
   inline static var HALF_CUT_OFF = 13;
   
-  static public function dualsort<T>(a:Array<T>, cmp:T->T->Int, lo:Int, hi:Int, div:Int)
+  static public function dualsort<T>(a:Array<T>, cmp:T->T->Int, lo:Int, hi:Int, div:Int, level = 0):Void
   {
+    QuickSort.stackDepth = level > QuickSort.stackDepth ? level : QuickSort.stackDepth;
+    QuickSort.calls++;
+    
     var len = hi - lo;
     
     if (len < CUT_OFF) { // insertion sort for tiny array
@@ -85,8 +88,8 @@ class YaroslavskiyDualPivot
     Util.swap(a, great + 1, hi);
     
     // subarrays
-    dualsort(a, cmp, lo, less - 2, div);
-    dualsort(a, cmp, great + 2, hi, div);
+    dualsort(a, cmp, lo, less - 2, div, level + 1);
+    dualsort(a, cmp, great + 2, hi, div, level + 1);
 
     // equal elements
     //if (dist > len - 13 && pivot1 != pivot2) {
@@ -109,7 +112,7 @@ class YaroslavskiyDualPivot
     
     // subarray
     if (cmp(pivot1, pivot2) < 0) {
-      dualsort(a, cmp, less, great, div);
+      dualsort(a, cmp, less, great, div, level + 1);
     }
   }
 }
