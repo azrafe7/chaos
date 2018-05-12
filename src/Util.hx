@@ -55,6 +55,15 @@ class Util
     }
   }
   
+  static public function shuffleRange<T>(a:Array<T>, lo:Int, hi:Int):Void
+  {
+    var len = hi - lo;
+    for (i in lo...lo + len - 2) {
+      var j = i + Std.random(len - i);
+      Util.swap(a, i, j);
+    }
+  }
+  
   static public function highlightIndices<T>(a:Array<T>, indices:Array<Int>, labels:Array<String>=null)
   {
     // clean/extend labels to be same length as indices

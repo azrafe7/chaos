@@ -14,7 +14,7 @@ class QuickSort {
   
   static public var stackDepth = 0;
   static public var calls = 0;
-  static public inline var M = 0;
+  static public inline var M = 10;
   static public function qsort<T>(a:Array<T>, cmp:T -> T -> Int, lo:Int, hi:Int, level=0):Void
   {
     stackDepth = level > stackDepth ? level : stackDepth;
@@ -138,6 +138,7 @@ class QuickSort {
     return a[lo];
   }
   
+  // Lomuto
   static public function partition<T>(a:Array<T>, cmp:T -> T -> Int, lo:Int, hi:Int, pivotIdx:Int):Int
   {
     var pivot = a[pivotIdx];
@@ -171,7 +172,8 @@ class QuickSort {
     //trace(Util.highlightIndices(a, [storeIdx], null));
     return storeIdx;
   }
-  
+
+  // Hoare more or less
   static public function partitionX<T>(a:Array<T>, cmp:T -> T -> Int, lo:Int, hi:Int, pivotIdx:Int):Int
   {
     var pivot = a[pivotIdx];

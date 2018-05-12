@@ -9,6 +9,7 @@ class InsertionSort
   
   inline static public function insertionSort<T>(a:Array<T>, cmp:T -> T -> Int, start:Int, count:Int):Void
   {
+    if (count < 1) return;
     var j = start;
     for (i in start + 1...start + count) {
       j = i;

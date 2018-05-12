@@ -6,6 +6,7 @@
 //
 
 
+// particularly slow for sorted/rev_sorted inputs (a bit underperformant for organ_pipe inputs)
 class Bentley3Way 
 {
 
