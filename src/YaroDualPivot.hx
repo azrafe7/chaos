@@ -9,19 +9,32 @@ class YaroDualPivot
     //Util.shuffle(a); // check if needed to make it more stable/predictable, or can be removed
     //trace(Util.sortInfo(a, cmp));
     //Util.shuffle(a);
+    kth = a.length >> 1;
     dualsort(a, cmp, 0, a.length - 1, 3);
+    //trace(Util.highlightIndices(a, [kth], ['^']));
   }
 
-  inline static public var CUT_OFF = 27;
+  // this should be at least 3 
+  // (as the algo relies on insertionSort for sorting sub-sequences of length 2)
+  inline static public var CUT_OFF = 27; 
   inline static public var HALF_CUT_OFF = CUT_OFF >> 1;
+
+  
+  static var kth = 0;
   
   static public function dualsort<T>(a:Array<T>, cmp:T->T->Int, lo:Int, hi:Int, div:Int, level = 0):Void
   {
     QuickSort.stackDepth = level > QuickSort.stackDepth ? level : QuickSort.stackDepth;
     QuickSort.calls++;
     
-    //while (hi - lo >= 1) {
-    //if (hi - lo >= 1) {
+    //var indent = "";
+    //for (i in 0...level) indent += "--";
+    //trace('LEV $level');
+    //trace(indent + a.toString());
+    //trace(indent + Util.highlightIndices(a, [lo, hi], ['L', 'H']));
+    
+    //while (hi - lo >= 1)
+    //if (hi - lo >= 1)
     {
       //trace("useless");
       
@@ -35,31 +48,36 @@ class YaroDualPivot
     
       if (len < CUT_OFF) { // insertion sort for tiny array
         
-        //trace("INS_SORT ", len);
-        //trace(a.toString());
-        //trace(Util.highlightIndices(a, [lo, hi], ['L','H']));
+        //trace(indent + "INS_SORT ", len);
+        //trace(indent + a.toString());
+        //trace(indent + Util.highlightIndices(a, [lo, hi], ['L','H']));
+        
+        if (len < 1) {
+          //trace('return');
+          return;
+        }
         
         //for (int i = lo + 1; i <= hi; i++) {
         //trace('$len $lo $hi');
         
-        InsertionSort.insertionSort(a, cmp, lo, hi - lo + 1);
+        //InsertionSort.insertionSort(a, cmp, lo, hi - lo + 1);
         //MergeSort.sortRange(a, cmp, lo, hi);
         
         //for (i in lo...hi) {
         //  if (cmp(a[i], a[i + 1]) > 0) throw '$i ${i+1} $lo $hi';
         //}
         
-        //for (i in lo + 1...hi + 1) {
-        //  //trace(a.toString());
-        //  
-        //  //for (int j = i; j > lo && a[j] < a[j - 1]; j--) {
-        //  var j = i;
-        //  //trace(Util.highlightIndices(a, [i, j], ['i','j']));
-        //  while (j > lo && cmp(a[j], a[j - 1]) < 0) {
-        //    Util.swap(a, j, j - 1);
-        //    j--;
-        //  }
-        //}
+        for (i in lo + 1...hi + 1) {
+          //trace(a.toString());
+          
+          //for (int j = i; j > lo && a[j] < a[j - 1]; j--) {
+          var j = i;
+          //trace(Util.highlightIndices(a, [i, j], ['i','j']));
+          while (j > lo && cmp(a[j], a[j - 1]) < 0) {
+            Util.swap(a, j, j - 1);
+            j--;
+          }
+        }
         
         return;
       }
@@ -75,8 +93,8 @@ class YaroDualPivot
       var m1 = lo + third;
       var m2 = hi - third;
       
-      //trace(a.toString());
-      //trace(Util.highlightIndices(a, [m1, m2], ['m','M']));
+      //trace(indent + a.toString());
+      //trace(indent + Util.highlightIndices(a, [m1, m2], ['m','M']));
       
       if (m1 <= lo) {
         m1 = lo + 1;
@@ -84,7 +102,7 @@ class YaroDualPivot
       if (m2 >= hi) {
         m2 = hi - 1;
       }
-      //trace(Util.highlightIndices(a, [m1, m2], ['m','M']));
+      //trace(indent + Util.highlightIndices(a, [m1, m2], ['m','M']));
       
       if (cmp(a[m1], a[m2]) < 0) {
         Util.swap(a, m1, lo);
@@ -95,8 +113,8 @@ class YaroDualPivot
         Util.swap(a, m2, lo);
       }
       
-      //trace(a.toString());
-      //trace(Util.highlightIndices(a, [m1, m2], ['m','M']));
+      //trace(indent + a.toString());
+      //trace(indent + Util.highlightIndices(a, [m1, m2], ['m','M']));
       
       // pivots
       var pivot1 = a[lo];
@@ -106,10 +124,10 @@ class YaroDualPivot
       var less = lo + 1;
       var great = hi - 1;
       
-      //trace(pivot1, pivot2);
-      //trace(a.toString());
-      //trace(Util.highlightIndices(a, [lo, hi], ['L','H']));
-      //trace(Util.highlightIndices(a, [less, great], ['<','>']));
+      //trace(indent + 'p1:$pivot1 p2:$pivot2');
+      //trace(indent + a.toString());
+      //trace(indent + Util.highlightIndices(a, [lo, hi], ['L','H']));
+      //trace(indent + Util.highlightIndices(a, [less, great], ['<','>']));
       
       // sorting
       //for (int k = less; k <= great; k++) {
@@ -141,17 +159,23 @@ class YaroDualPivot
         div++;
       }
       //trace(dist);
-      //trace(a.toString());
-      //trace(Util.highlightIndices(a, [less-1, lo], ['l', 'L']));
-      //trace(Util.highlightIndices(a, [great+1, hi], ['g', 'H']));
+      //trace(indent + a.toString());
+      //trace(indent + Util.highlightIndices(a, [less-1, lo], ['l', 'L']));
+      //trace(indent + Util.highlightIndices(a, [great+1, hi], ['g', 'H']));
       Util.swap(a, less - 1, lo);
       Util.swap(a, great + 1, hi);
       
       // subarrays
       //if ((less - 2) - lo > hi - (great + 2)) {
+        //trace(indent + 'less');
+        //trace(indent + a.toString());
+        //trace(indent + Util.highlightIndices(a, [lo, less-2], ['[', ']']));
         dualsort(a, cmp, lo, less - 2, div, level + 1);
       //  lo = great + 2;
       //} else {
+        //trace(indent + 'great');
+        //trace(indent + a.toString());
+        //trace(indent + Util.highlightIndices(a, [great+2, hi], ['[', ']']));
         dualsort(a, cmp, great + 2, hi, div, level + 1);
       //  hi = less - 2;
       //}
@@ -175,6 +199,9 @@ class YaroDualPivot
           }
           k++;
         }
+        //trace("eq elms");
+        //trace(indent + a.toString());
+        //trace(indent + Util.highlightIndices(a, [less, great], ['l', 'g']));
       }
       
       // subarray

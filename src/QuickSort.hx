@@ -124,9 +124,34 @@ class QuickSort {
   
   static function qselect<T>(a:Array<T>, cmp:T -> T -> Int, lo:Int, hi:Int, kth:Int):T
   {
+    #if js
+    untyped __js__('debugger');
+    #end
     while (true) {
       if (lo == hi) break;
-      var pivotIdx = partitionMed3(a, cmp, lo, hi, medianOfThree(a, cmp, lo, hi));
+      
+      // use insertion sort for small sequences
+      if (hi - lo < M) {
+        for (i in (lo + 1)...hi + 1) {
+          var j = i;
+          while (j > lo) {
+            if (cmp(a[j], a[j - 1]) < 0)
+              Util.swap(a, j - 1, j);
+            else
+              break;
+            j--;
+          }
+        }
+        return a[kth];
+      }
+      
+      //trace(a.toString());
+      var mid = medianOfThree(a, cmp, lo, hi);
+      //trace(a.toString());
+      //trace(Util.highlightIndices(a, [mid, lo, hi], 'MLH'));
+      var pivotIdx = partitionMed3(a, cmp, lo, hi, mid);
+      //trace(a.toString());
+      //trace(Util.highlightIndices(a, [pivotIdx, lo, hi], '^LH'));
       if (kth == pivotIdx) {
         return a[kth];
       } else if (kth < pivotIdx) {
@@ -158,6 +183,7 @@ class QuickSort {
   
   static public function partitionMed3<T>(a:Array<T>, cmp:T -> T -> Int, lo:Int, hi:Int, pivotIdx:Int):Int
   {
+    if (hi - lo <= 2) return pivotIdx; // elements already sorted by med3
     var pivot = a[pivotIdx];
     Util.swap(a, pivotIdx, hi-1); // move pivot to end - 1
     var storeIdx = lo+1;

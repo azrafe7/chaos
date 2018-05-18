@@ -1,4 +1,5 @@
 package;
+import haxe.ds.Either;
 
 class Util 
 {
@@ -64,10 +65,17 @@ class Util
     }
   }
   
-  static public function highlightIndices<T>(a:Array<T>, indices:Array<Int>, labels:Array<String>=null)
+  static public function highlightIndices<T>(a:Array<T>, indices:Array<Int>, labelsStringOrArray:OneOf<String, Array<String>>)
   {
     // clean/extend labels to be same length as indices
-    if (labels == null) labels = [];
+    var labels:Array<String> = [];
+    switch (labelsStringOrArray) 
+    {
+      case Left(s): labels = s.split('');
+      case Right(a): labels = a;
+      default:
+    }
+
     for (i in 0...indices.length) {
       if (i >= labels.length) labels[i] = '^';
       if (labels[i].length > 1) labels[i] = labels[i].charAt(0);
@@ -103,5 +111,27 @@ class Util
   
   static public function imax(a:Int, b:Int):Int {
     return a > b ? a : b;
+  }
+  
+  inline static public function sign(x:Int):Int {
+    return x < 0 ? -1 : x > 0 ? 1 : 0;
+  }
+}
+
+abstract OneOf<A, B>(Either<A, B>) from Either<A, B> to Either<A, B> {
+  @:from inline static function fromA<A, B>(a:A):OneOf<A, B> {
+    return Left(a);
+  }
+  @:from inline static function fromB<A, B>(b:B):OneOf<A, B> {
+    return Right(b);  
+  } 
+    
+  @:to inline function toA():Null<A> return switch(this) {
+    case Left(a): a; 
+    default: null;
+  }
+  @:to inline function toB():Null<B> return switch(this) {
+    case Right(b): b;
+    default: null;
   }
 }

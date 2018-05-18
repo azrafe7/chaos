@@ -23,10 +23,7 @@ class MergeSort
   // both lo and hi inclusive
   static public function sortRange<T>(a:Array<T>, cmp:T -> T -> Int, lo:Int, hi:Int):Void 
   {
-    //if (hi - lo + 1 == a.length) {
-    //  sort(a, cmp);
-    //  return;
-    //}
+    if (hi <= lo) return;
     
     var scratch = [for (i in lo...hi+1) a[i]]; // scratch[0] = a[i], ... , scratch[hi-lo] = a[hi], so it might be smaller than a
     //

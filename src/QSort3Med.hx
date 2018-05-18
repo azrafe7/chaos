@@ -160,14 +160,6 @@ class QSort3Med
       //trace(Util.highlightIndices(a, [i,j], ['i','j']));
       //trace(Util.highlightIndices(a, [p,q], ['p','q']));
       if (i >= j) {
-        if (i == lo) {
-          //trace('maybe we have a pivot both at $i and $hi: ', a[i], a[hi]);
-          //while (cmp(a[j], pivot) == 0) {
-          //  q--;
-          //  //i++;
-          //  //j++;
-          //}
-        }
         break;
       }
       Util.swap(a, i, j);
@@ -224,6 +216,29 @@ class QSort3Med
     
     out_ij[0] = i;
     out_ij[1] = j;
+  }
+  
+  static public function select<T>(a:Array<T>, cmp:T -> T -> Int, kth:Int):T
+  {
+    return qselect(a, cmp, 0, a.length - 1, kth);
+  }
+  
+  static function qselect<T>(a:Array<T>, cmp:T -> T -> Int, lo:Int, hi:Int, kth:Int):T
+  {
+    var out_ij = [0, 0];
+    while (true) {
+      if (lo == hi) break;
+      partition(a, cmp, lo, hi, out_ij);
+      var pivotIdx = out_ij[1] + 1;
+      if (kth == pivotIdx) {
+        return a[kth];
+      } else if (kth < pivotIdx) {
+        hi = pivotIdx - 1;
+      } else {
+        lo = pivotIdx + 1;
+      }
+    }
+    return a[lo];
   }
   
   // return the index of the median element among a[i], a[j], and a[k]

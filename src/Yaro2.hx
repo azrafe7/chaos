@@ -1,5 +1,7 @@
 // https://cs.stackexchange.com/questions/24092/dual-pivot-quicksort-reference-implementation
 
+// qselect on dualpivot ref impl.
+// http://wwwagak.informatik.uni-kl.de/downloads/papers/Analysis_of_Quickselect_under_Yaroslavskiys_Dual-Pivoting_Algorithm.pdf
 
 class Yaro2 
 {
@@ -14,7 +16,19 @@ class Yaro2
     QuickSort.stackDepth = level > QuickSort.stackDepth ? level : QuickSort.stackDepth;
     QuickSort.calls++;
     
-    if (hi > lo) {
+    //trace('yaro2 lev:$level');
+    
+    var stack:Array<Int> = [lo, hi, level];
+    
+  while (stack.length > 0) {
+    QuickSort.stackDepth = level > QuickSort.stackDepth ? level : QuickSort.stackDepth;
+    lo = stack.shift();
+    hi = stack.shift();
+    level = stack.shift();
+
+    //while (hi > lo) 
+    if (hi > lo) 
+    {
       
       // OPT: use insertion sort for small sequences
       if (hi - lo < QuickSort.M) {
@@ -28,8 +42,8 @@ class Yaro2
             j--;
           }
         }
-        return;
-      }
+        //return;
+      } else {
       
       // Choose outermost elements as pivots
       if (cmp(a[lo], a[hi]) > 0) Util.swap(a, lo, hi);
@@ -59,9 +73,14 @@ class Yaro2
       Util.swap(a, hi, g);
 
       // Recursively sort partitions
-      dualsort(a, cmp, lo, l - 1);
-      dualsort(a, cmp, l + 1, g - 1);
-      dualsort(a, cmp, g + 1, hi);
+        //dualsort(a, cmp, lo, l - 1, level + 1);
+        stack.push(lo); stack.push(l - 1); stack.push(level + 1);
+        //dualsort(a, cmp, l + 1, g - 1, level + 1);
+        stack.push(l + 1); stack.push(g - 1); stack.push(level + 1);
+        //dualsort(a, cmp, g + 1, hi, level + 1);
+        stack.push(g + 1); stack.push(hi); stack.push(level + 1);
     }
+    }
+  }
   }  
 }
