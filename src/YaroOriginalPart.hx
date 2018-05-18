@@ -8,7 +8,7 @@
 class YaroOriginalPart
 {
 
-  static public var sorted = [];
+/*  static public var sorted = [];
   static public var inplace = [];
   
   static public var sortedPart = [];
@@ -16,33 +16,33 @@ class YaroOriginalPart
   
   static public var sortedSel = [];
   static public var inplaceSel = [];
-  
+*/  
   // to ensure correctness, don't go below 6 (insertion sort IS needed). Default is 17
-  static inline var TINY_SIZE = 6; 
+  static inline var TINY_SIZE = 17; 
 
-  static inline var DIST_SIZE = 6;
+  static inline var DIST_SIZE = 13;
   
   inline static public function sort<T>(a:Array<T>, cmp:T -> T -> Int):Void
   {
   #if js
     untyped __js__('debugger');
   #end
-    sorted = a.copy();
-    sorted.sort(cmp);
-    inplace = [for (i in a) cast -1];
+    //sorted = a.copy();
+    //sorted.sort(cmp);
+    //inplace = [for (i in a) cast -1];
     dualsort(a, cmp, 0, a.length - 1);
-    trace(sorted.toString());
-    trace(inplace.toString());
-    for (i in 0...a.length) { 
-      if (cmp(cast sorted[i], cast inplace[i]) != 0) trace('not in place $i');
-    }
+    //trace(sorted.toString());
+    //trace(inplace.toString());
+    //for (i in 0...a.length) { 
+    //  if (cmp(cast sorted[i], cast inplace[i]) != 0) //trace('not in place $i');
+    //}
   }
   
   static public function dualsort<T>(a:Array<T>, cmp:T->T->Int, lo:Int, hi:Int, level = 0, kth = -1):Void
   {
     if (kth < 0) {
       kth = Std.random(a.length);
-      trace('kth:$kth');
+      //trace('kth:$kth');
     }
     
     QuickSort.stackDepth = level > QuickSort.stackDepth ? level : QuickSort.stackDepth;
@@ -69,12 +69,12 @@ class YaroOriginalPart
       //trace(a.toString());
       //trace(Util.highlightIndices(a, [lo, hi], ['L', 'H']));
       //trace('inplace?');
-      for (i in lo...hi + 1) {
-        inplace[i] = a[i];
-      }
-      if (kth >= lo && kth <= hi) {
-        trace('$kth-kth found: ${inplace[kth]}'); 
-      }
+      //for (i in lo...hi + 1) {
+      //  inplace[i] = a[i];
+      //}
+      //if (kth >= lo && kth <= hi) {
+      //  //trace('$kth-kth found: ${inplace[kth]}'); 
+      //}
       //trace(sorted.toString());
       //trace(inplace.toString());
       //trace(Util.highlightIndices(inplace, [lo, hi], ['[', ']']));
@@ -204,22 +204,22 @@ class YaroOriginalPart
     //trace('sure kth ${less - 1} ${great + 1}');
     //trace(a.toString());
     //trace(Util.highlightIndices(a, [less - 1, great + 1], '^^'));
-    inplace[less - 1] = pivot1;
-    inplace[great + 1] = pivot2;
-    if (kth == less - 1 || kth == great + 1) {
-      trace('$kth-kth found: ${inplace[kth]}'); 
-    }
+    //inplace[less - 1] = pivot1;
+    //inplace[great + 1] = pivot2;
+    //if (kth == less - 1 || kth == great + 1) {
+    //  //trace('$kth-kth found: ${inplace[kth]}'); 
+    //}
     //trace(sorted.toString());
     //trace(inplace.toString());
     dualsort(a, cmp, lo, less - 2, level + 1, kth);
     dualsort(a, cmp, great + 2, hi, level + 1, kth);
     
     // equal elements
-    trace('<equal');
+    //trace('<equal');
     var _k = less;
-    trace(sorted.toString());
-    trace(a.toString());
-    trace(Util.highlightIndices(a, [less, great], 'lg'));
+    //trace(sorted.toString());
+    //trace(a.toString());
+    //trace(Util.highlightIndices(a, [less, great], 'lg'));
     if ((great - less > len - DIST_SIZE) && diffPivots) {
       //trace(a.toString());
       //trace(Util.highlightIndices(a, [k, great], 'LlHg'));
@@ -243,11 +243,11 @@ class YaroOriginalPart
         k++;
       }
     }
-    trace(sorted.toString());
-    trace(a.toString());
-    trace(inplace.toString());
-    trace(Util.highlightIndices(a, [less,great,k], 'lgk'));
-    trace('equal>');
+    //trace(sorted.toString());
+    //trace(a.toString());
+    //trace(inplace.toString());
+    //trace(Util.highlightIndices(a, [less,great,k], 'lgk'));
+    //trace('equal>');
     
     // center part
     //trace('center');
@@ -265,23 +265,23 @@ class YaroOriginalPart
   #if js
     untyped __js__('debugger');
   #end
-    sortedPart = a.copy();
-    sortedPart.sort(cmp);
-    inplacePart = [for (i in a) cast -1];
+    //sortedPart = a.copy();
+    //sortedPart.sort(cmp);
+    //inplacePart = [for (i in a) cast -1];
     _sortpart(a, cmp, 0, a.length - 1);
-    trace(sortedPart.toString());
-    trace(inplacePart.toString());
-    for (i in 0...a.length) {
-      if (cmp(cast sortedPart[i], cast inplacePart[i]) != 0) trace('not in place $i');
-    }
+    //trace(sortedPart.toString());
+    //trace(inplacePart.toString());
+    //for (i in 0...a.length) {
+    //  if (cmp(cast sortedPart[i], cast inplacePart[i]) != 0) //trace('not in place $i');
+    //}
   }
   
   
   static public function _sortpart<T>(a:Array<T>, cmp:T->T->Int, lo:Int, hi:Int, level = 0):Void
   {
     
-    QuickSort.stackDepth = level > QuickSort.stackDepth ? level : QuickSort.stackDepth;
-    QuickSort.calls++;
+    //QuickSort.stackDepth = level > QuickSort.stackDepth ? level : QuickSort.stackDepth;
+    //QuickSort.calls++;
     
     var out_pivots = [0, 0];
     
@@ -292,7 +292,7 @@ class YaroOriginalPart
       var x:T;
       
       if (len < TINY_SIZE) { // insertion sort on tiny array
-        trace('<use ins_sort');
+        //trace('<use ins_sort');
         for (i in lo + 1...hi + 1) {
           var j = i;
           while (j > lo && cmp(a[j], a[j - 1]) < 0) {
@@ -303,16 +303,16 @@ class YaroOriginalPart
             j--;
           }
         }
-        trace(a.toString());
-        trace(Util.highlightIndices(a, [lo, hi], ['L', 'H']));
-        trace('inplace?');
-        for (i in lo...hi + 1) {
-          inplacePart[i] = a[i];
-        }
-        trace(sortedPart.toString());
-        trace(inplacePart.toString());
-        trace(Util.highlightIndices(inplace, [lo, hi], ['[', ']']));
-        trace('useD ins_sort>');
+        //trace(a.toString());
+        //trace(Util.highlightIndices(a, [lo, hi], ['L', 'H']));
+        //trace('inplace?');
+        //for (i in lo...hi + 1) {
+        //  inplacePart[i] = a[i];
+        //}
+        //trace(sortedPart.toString());
+        //trace(inplacePart.toString());
+        //trace(Util.highlightIndices(inplace, [lo, hi], ['[', ']']));
+        //trace('useD ins_sort>');
         return;
       }
     
@@ -330,10 +330,10 @@ class YaroOriginalPart
       _sortpart(a, cmp, great + 2, hi, level + 1);
       
       // equal elements
-      trace('<equal');
-      trace(sortedPart.toString());
-      trace(a.toString());
-      trace(Util.highlightIndices(a, [less, great], 'lg'));
+      //trace('<equal');
+      //trace(sortedPart.toString());
+      //trace(a.toString());
+      //trace(Util.highlightIndices(a, [less, great], 'lg'));
       var k:Int = -1;
       if ((great - less > len - DIST_SIZE) && diffPivots) {
         //trace(a.toString());
@@ -358,11 +358,11 @@ class YaroOriginalPart
           k++;
         }
       }
-      trace(sortedPart.toString());
-      trace(a.toString());
-      trace(inplace.toString());
-      trace(Util.highlightIndices(a, [less,great,k], 'lgk'));
-      trace('equal>');
+      //trace(sortedPart.toString());
+      //trace(a.toString());
+      //trace(inplace.toString());
+      //trace(Util.highlightIndices(a, [less,great,k], 'lgk'));
+      //trace('equal>');
       
       // center part
       //trace('center');

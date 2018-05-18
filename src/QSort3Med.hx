@@ -53,17 +53,17 @@ class QSort3Med
       //trace(Util.highlightIndices(a, [i, j], ['i','j']));
       
       // test invariants
-      var pivot = a[j + 1];
+      //var pivot = a[j + 1];
       //trace("pivotValue: " + pivot);
       
-      var firstPivotIdx = j + 1;
-      var lastPivotIdx = i; // exclusive
+      //var firstPivotIdx = j + 1;
+      //var lastPivotIdx = i; // exclusive
       
-      var firstLtIdx = lo;
-      var lastLtIdx = firstPivotIdx; // exclusive
+      //var firstLtIdx = lo;
+      //var lastLtIdx = firstPivotIdx; // exclusive
       
-      var firstGtIdx = lastPivotIdx;
-      var lastGtIdx = hi; // exclusive
+      //var firstGtIdx = lastPivotIdx;
+      //var lastGtIdx = hi; // exclusive
       
       // nothing can be said about a[hi] (might equal pivot!)
       //trace("INVARIANTS " + pivot);
@@ -243,8 +243,19 @@ class QSort3Med
   
   // return the index of the median element among a[i], a[j], and a[k]
   static function median3<T>(a:Array<T>, cmp:T->T->Int, i:Int, j:Int, k:Int):Int {
+    //return {
+    //  if (cmp(a[i], a[j]) < 0) {
+    //    if (cmp(a[j], a[k]) < 0) j;
+    //    else if (cmp(a[i], a[k]) < 0) k;
+    //    else i;
+    //  } else {
+    //    if (cmp(a[k], a[j]) < 0) j;
+    //    else if (cmp(a[k], a[i]) < 0) k;
+    //    else i;
+    //  } 
+    //}
     return (cmp(a[i], a[j]) < 0 ?
            (cmp(a[j], a[k]) < 0 ? j : cmp(a[i], a[k]) < 0 ? k : i) :
            (cmp(a[k], a[j]) < 0 ? j : cmp(a[k], a[i]) < 0 ? k : i));
-    }
+  }
 }

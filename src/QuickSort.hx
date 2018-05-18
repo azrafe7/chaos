@@ -183,7 +183,10 @@ class QuickSort {
   
   static public function partitionMed3<T>(a:Array<T>, cmp:T -> T -> Int, lo:Int, hi:Int, pivotIdx:Int):Int
   {
-    if (hi - lo <= 2) return pivotIdx; // elements already sorted by med3
+    //if (hi - lo <= 2) {
+    //  if (hi - lo <= 2) trace("less than 3");
+    //  return pivotIdx; // elements already sorted by med3
+    //}
     var pivot = a[pivotIdx];
     Util.swap(a, pivotIdx, hi-1); // move pivot to end - 1
     var storeIdx = lo+1;

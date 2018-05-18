@@ -40,8 +40,8 @@ class MergeSort
   
   static function topDownSplitMerge<T>(b:Array<T>, cmp:T -> T -> Int, start:Int, end:Int, a:Array<T>, level=0):Void
   {
-    QuickSort.stackDepth = level > QuickSort.stackDepth ? level : QuickSort.stackDepth;
-    QuickSort.calls++;
+    //QuickSort.stackDepth = level > QuickSort.stackDepth ? level : QuickSort.stackDepth;
+    //QuickSort.calls++;
     
     if (end - start < 2) return;
     
@@ -105,8 +105,8 @@ class MergeSort
   
   static function topDownSplitMergeRange<T>(b:Array<T>, cmp:T -> T -> Int, start:Int, end:Int, a:Array<T>, offset:Int, level=0):Void
   {
-    QuickSort.stackDepth = level > QuickSort.stackDepth ? level : QuickSort.stackDepth;
-    QuickSort.calls++;
+    //QuickSort.stackDepth = level > QuickSort.stackDepth ? level : QuickSort.stackDepth;
+    //QuickSort.calls++;
     
     if (end - start < 2) return;
 

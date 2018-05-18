@@ -9,15 +9,15 @@ class YaroDualPivot
     //Util.shuffle(a); // check if needed to make it more stable/predictable, or can be removed
     //trace(Util.sortInfo(a, cmp));
     //Util.shuffle(a);
-    kth = a.length >> 1;
+    //kth = a.length >> 1;
     dualsort(a, cmp, 0, a.length - 1, 3);
     //trace(Util.highlightIndices(a, [kth], ['^']));
   }
 
   // this should be at least 3 
   // (as the algo relies on insertionSort for sorting sub-sequences of length 2)
-  inline static public var CUT_OFF = 27; 
-  inline static public var HALF_CUT_OFF = CUT_OFF >> 1;
+  inline static public var CUT_OFF = 17; 
+  inline static public var HALF_CUT_OFF = 13;// CUT_OFF >> 1;
 
   
   static var kth = 0;
