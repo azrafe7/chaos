@@ -5,6 +5,7 @@ using haxe.macro.Tools;
 #end
 
 class Macros {
+  // https://code.haxe.org/category/macros/enum-abstract-values.html
   public static macro function getValues(typePath:Expr):Expr {
     // Get the type from a given expression converted to string.
     // This will work for identifiers and field access which is what we need,
